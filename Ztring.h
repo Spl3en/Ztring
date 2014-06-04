@@ -44,6 +44,7 @@
 /* Librairies */
 #include <stdarg.h>
 #include <string.h>
+#include <ctype.h>
 #include "../BbQueue/BbQueue.h"
 
 /* Macros */
@@ -103,7 +104,7 @@ buffer_new_from_ptr_noalloc (unsigned char *ptr, int size);
 
 
 	/** * * * * * * * *
-	*	 @Methods	*
+	*	 @Functions	*
 	* * * * * * * * * */
 /* * Buffer * */
 
@@ -197,7 +198,7 @@ void
 str_debug			   (const char *str);
 
 void
-str_debug_len		   (const unsigned char *str, int len);
+str_debug_len		   (const char *str, int len);
 
 char *
 str_bet				 (const char *str, const char *start, const char *end);
@@ -225,6 +226,9 @@ str_explode			 (char *str, const char *delimiter);
 
 int
 is_letter (char c);
+
+int
+is_printable (char c);
 
 /* * File * */
 char *
@@ -259,10 +263,6 @@ file_get_lines_count 	(char *filename);
 
 char *
 file_get_contents_line  (const char *filename, int *line);
-
-// String.h fix
-
-char *strdup (const char*);
 
 	/** * * * * * * * *
 	*   @Destructors  *

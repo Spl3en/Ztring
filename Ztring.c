@@ -8,7 +8,7 @@
 #include "Ztring.h"
 
 /**
-*	Private Methods
+*	Private Functions
 */
 static int
 str_sort_by_alpha_ex (char *str1, char *str2, int n)
@@ -69,7 +69,7 @@ is_base64 (char c)
 }
 
 /**
-*	Public Methods
+*	Public Functions
 */
 Ztring *
 ztring_new (void)
@@ -355,7 +355,7 @@ file_getline (FILE *file)
 int
 str_is_empty(char *msg)
 {
-	return (strcmp(msg, "") == 0);
+	return (msg[0] == '\0');
 }
 
 void
@@ -794,6 +794,9 @@ file_put_contents (const char *filename, const char *text, void *type)
 	f = file_open(filename, open_type);
 
 	fprintf(f, "%s", text);
+	fflush(f);
+
+	fclose(f);
 }
 
 void
@@ -1147,7 +1150,7 @@ str_repeat (char *repeat_pattern, int n)
 }
 
 void
-str_debug_len (const unsigned char *str, int len)
+str_debug_len (const char *str, int len)
 {
 	printf("String debug Data :\n");
 
@@ -1180,7 +1183,7 @@ str_debug_len (const unsigned char *str, int len)
 	printf("\n");
 }
 
-int
+inline int
 is_letter (char c)
 {
 	return (
@@ -1189,12 +1192,18 @@ is_letter (char c)
 	);
 }
 
+inline int
+is_printable (char c)
+{
+	return isprint (c);
+}
+
 void
 ztring_debug (Ztring *z)
 {
-	char *buffer = ztring_get_text(z);
+	const char *buffer = ztring_get_text(z);
 	str_debug_len(buffer, ztring_get_len(z));
-	free(buffer);
+	free((void*)buffer);
 }
 
 void
