@@ -373,6 +373,14 @@ str_cpy (char **a, const char *b)
 }
 
 void
+strn_cpy_alloc (char **a, const char *b, int len)
+{
+	*a = malloc(len + 1);
+	strncpy(*a, b, len);
+	(*a)[len] = '\0';
+}
+
+void
 strn_cpy (char *dest, const char *str, int size)
 {
 	strncpy(dest, str, size);
@@ -382,7 +390,7 @@ strn_cpy (char *dest, const char *str, int size)
 int
 str_substring (const char *str, int start, int end, char *res)
 {
-	if (start < end)
+	if (start <= end)
 	{
 		int len = end - start;
 		res[len] = '\0';
@@ -540,10 +548,9 @@ str_replace (const char *search, const char *replace, char *string)
 }
 
 char *
-str_malloc_clear (int size)
+str_malloc_clear (int string_len)
 {
-	char *str = malloc(size);
-	str[0] = '\0';
+	char *str = malloc_zero(string_len + 1);
 
 	return str;
 }
@@ -571,7 +578,7 @@ str_explode (char *str, const char *delimiter)
 	while (
         ((pos = str_pos(str, delimiter)) != -1)
     &&  (pos != 0)
-    &&  (pos <= len)
+    &&  (pos < len)
     )
 	{
         if (q == NULL)
@@ -579,7 +586,7 @@ str_explode (char *str, const char *delimiter)
 
         tmp = malloc(pos);
         strncpy(tmp, str, pos);
-        tmp[pos-1] = '\0';
+        tmp[pos] = '\0';
         bb_queue_add(q, tmp);
 
         str = str + pos + len_delimiter;
@@ -598,12 +605,18 @@ str_explode (char *str, const char *delimiter)
 char *
 file_get_contents (const char *filename)
 {
+	return file_get_contents_and_size (filename, (int[]){0});
+}
+
+char *
+file_get_contents_and_size (const char *filename, int *filesize)
+{
 	FILE *f = NULL;
 	char *ret = NULL;
-	char c;
 	int size = 0;
+	*filesize = 0;
 
-	f = fopen(filename, "r");
+	f = fopen(filename, "rb");
 
 	if (!f)
 	{
@@ -613,14 +626,16 @@ file_get_contents (const char *filename)
 
 	fseek(f, 0, SEEK_END);
 	size = ftell(f);
+	*filesize = size;
 
 	rewind(f);
 
 	ret = malloc(size + 1);
 	size = 0;
 
-	while ((c = fgetc(f)) != EOF)
-		ret[size++] = c;
+	for (size = 0; size < *filesize; size++) {
+		ret[size] = fgetc(f);
+	}
 
 	ret[size] = '\0';
 
@@ -628,6 +643,13 @@ file_get_contents (const char *filename)
 
 	return ret;
 }
+
+int
+file_exists (const char *filename)
+{
+	return access(filename, F_OK) != -1;
+}
+
 char *
 file_get_contents_line (const char *filename, int *line)
 {
@@ -637,7 +659,7 @@ file_get_contents_line (const char *filename, int *line)
 	int size = 0;
 	*line = 1;
 
-	f = fopen(filename, "r");
+	f = fopen(filename, "rb");
 
 	if (!f)
 	{
@@ -694,13 +716,13 @@ file_get_contents_handle (FILE *f)
 	return ret;
 }
 
-unsigned int
+unsigned long long int
 file_get_size(const char *filename)
 {
 	FILE *f = NULL;
-	unsigned int size = 0;
+	unsigned long long int size = 0;
 
-	f = fopen(filename, "r");
+	f = fopen(filename, "rb");
 
 	if (!f)
 	{
@@ -731,7 +753,7 @@ file_get_size_handler (FILE *handler)
 int
 file_get_lines_count (char *filename)
 {
-	FILE* f = fopen(filename, "r");
+	FILE* f = fopen(filename, "rb");
 	int ch, lines = 0;
 
 	if (!f)
@@ -783,20 +805,37 @@ file_open (const char *filename, const char *open_mode)
 }
 
 void
+file_put_data (const char *filename, void *data, int size, void *type)
+{
+	char *open_type = NULL;
+	FILE *f = NULL;
+
+	open_type = (type == FILE_APPEND) ?
+		"ab+" : "wb+";
+
+	if ((f = file_open(filename, open_type)))
+	{
+		fwrite(data, size, 1, f);
+		fclose(f);
+	}
+}
+
+void
 file_put_contents (const char *filename, const char *text, void *type)
 {
 	char *open_type = NULL;
 	FILE *f = NULL;
 
 	open_type = (type == FILE_APPEND) ?
-		"a+" : "w+";
+		"ab+" : "wb+";
 
-	f = file_open(filename, open_type);
+	if ((f = file_open(filename, open_type)))
+	{
+		fprintf(f, "%s", text);
+		fflush(f);
 
-	fprintf(f, "%s", text);
-	fflush(f);
-
-	fclose(f);
+		fclose(f);
+	}
 }
 
 void
@@ -949,10 +988,21 @@ str_bet (const char *str, const char *start, const char *end)
 {
 	int len;
 	char *ret = NULL;
-	int start_len = strlen(start);
+	int start_len;
 
 	int pos_end;
-	int pos_start = str_pos(str, start);
+	int pos_start;
+
+	if (start != NULL)
+	{
+		start_len = strlen(start);
+		pos_start = str_pos(str, start);
+	}
+	else
+	{
+		start_len = 0;
+		pos_start = 0;
+	}
 
 	if (pos_start == -1)
 		return NULL;
@@ -968,13 +1018,16 @@ str_bet (const char *str, const char *start, const char *end)
 	len = (pos_end) - (pos_start + start_len);
 	ret = malloc(len + 1);
 
-	str_substring
+	if (-1 == str_substring
 	(
 		str,
 		pos_start + start_len,
 		pos_end,
 		ret
-	);
+	)) {
+		free(ret);
+		return NULL;
+	}
 
 	return ret;
 }
@@ -1150,7 +1203,7 @@ str_repeat (char *repeat_pattern, int n)
 }
 
 void
-str_debug_len (const char *str, int len)
+str_debug_len (const unsigned char *str, int len)
 {
 	printf("String debug Data :\n");
 
@@ -1183,7 +1236,7 @@ str_debug_len (const char *str, int len)
 	printf("\n");
 }
 
-inline int
+int
 is_letter (char c)
 {
 	return (
@@ -1201,9 +1254,9 @@ is_printable (char c)
 void
 ztring_debug (Ztring *z)
 {
-	const char *buffer = ztring_get_text(z);
+	char *buffer = ztring_get_text(z);
 	str_debug_len(buffer, ztring_get_len(z));
-	free((void*)buffer);
+	free(buffer);
 }
 
 void

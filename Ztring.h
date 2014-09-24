@@ -45,7 +45,9 @@
 #include <stdarg.h>
 #include <string.h>
 #include <ctype.h>
+#include <unistd.h>
 #include "../BbQueue/BbQueue.h"
+#include "../Utils/Utils.h"
 
 /* Macros */
 #define str_make_macro(s) (# s)
@@ -174,6 +176,9 @@ void
 str_cpy				    (char **dest, const char *str);
 
 void
+strn_cpy_alloc 			(char **dest, const char *str, int size);
+
+void
 strn_cpy				(char *dest, const char *str, int size);
 
 void
@@ -198,7 +203,7 @@ void
 str_debug			   (const char *str);
 
 void
-str_debug_len		   (const char *str, int len);
+str_debug_len		   (const unsigned char *str, int len);
 
 char *
 str_bet				 (const char *str, const char *start, const char *end);
@@ -225,9 +230,12 @@ BbQueue *
 str_explode			 (char *str, const char *delimiter);
 
 int
+str_b64_decode(unsigned char *dest, const char *src);
+
+inline int
 is_letter (char c);
 
-int
+inline int
 is_printable (char c);
 
 /* * File * */
@@ -249,7 +257,10 @@ file_put_contents	   (const char *filename, const char *text, void *type);
 char *
 file_get_contents	   (const char *filename);
 
-unsigned int
+char *
+file_get_contents_and_size (const char *filename, int *_size);
+
+unsigned long long int
 file_get_size		   (const char *filename);
 
 unsigned int
@@ -263,6 +274,9 @@ file_get_lines_count 	(char *filename);
 
 char *
 file_get_contents_line  (const char *filename, int *line);
+
+int
+file_exists 			(const char *filename);
 
 	/** * * * * * * * *
 	*   @Destructors  *
