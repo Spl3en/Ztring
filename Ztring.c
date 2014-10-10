@@ -144,6 +144,16 @@ ztring_new_with_text (char *text)
 	return z;
 }
 
+void
+ztring_set_text (Ztring *z, char *text)
+{
+	if (bb_queue_get_length(z->_text)) {
+		ztring_clear(z);
+	}
+
+	ztring_concat(z, text);
+}
+
 int
 ztring_get_len(Ztring *z)
 {

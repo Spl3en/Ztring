@@ -118,6 +118,9 @@ ztring_concat_letter	(Ztring *z, unsigned char c);
 char *
 ztring_get_text		 	(Ztring *z);
 
+void
+ztring_set_text 		(Ztring *z, char *text);
+
 char *
 ztring_get_text_reversed (Ztring *z);
 
