@@ -560,9 +560,7 @@ str_replace (const char *search, const char *replace, char *string)
 char *
 str_malloc_clear (int string_len)
 {
-	char *str = malloc_zero(string_len + 1);
-
-	return str;
+	return calloc(1, string_len);
 }
 
 void
@@ -936,18 +934,16 @@ str_pos_after_ptr (char *str, const char *search)
 }
 
 int
-str_pos (const char *str, const char *search)
+str_n_pos (const char *str, const char *search, int len_str)
 {
-	int i,  len_string = strlen(str),
+	int i,  len_string = len_str,
             len_search = strlen(search);
 	int count = 0;
-
 
 	for (i = 0; i < len_string; i++)
 	{
 		if (str[i] == search[count])
 			count++;
-
 		else
 			count = 0;
 
@@ -958,6 +954,12 @@ str_pos (const char *str, const char *search)
 	}
 
 	return -1;
+}
+
+int
+str_pos (const char *str, const char *search)
+{
+	return str_n_pos(str, search, strlen(str));
 }
 
 int

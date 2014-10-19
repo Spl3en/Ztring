@@ -190,6 +190,9 @@ str_gets				(char *buffer, int len);
 int
 str_pos				    (const char *str, const char *search);
 
+int
+str_n_pos 				(const char *str, const char *search, int len_str);
+
 char *
 str_pos_ptr             (char *str, const char *search);
 
