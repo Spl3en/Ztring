@@ -14,8 +14,8 @@ static int
 str_sort_by_alpha_ex (char *str1, char *str2, int n)
 {
 	// Return 1 for switch, else 0
-	int len1 = strlen(str1);
-	int len2 = strlen(str2);
+	int len1 = strlen (str1);
+	int len2 = strlen (str2);
 
 	if (n > len1)
 		return 0;
@@ -30,7 +30,7 @@ str_sort_by_alpha_ex (char *str1, char *str2, int n)
 		return 1;
 
 	else
-		return str_sort_by_alpha_ex(str1, str2, ++n);
+		return str_sort_by_alpha_ex (str1, str2, ++n);
 }
 
 static char
@@ -50,7 +50,7 @@ b64_decode (char c)
 	if (c >= 'A' && c <= 'Z') return (c - 'A');
 	if (c >= 'a' && c <= 'z') return (c - 'a' + 26);
 	if (c >= '0' && c <= '9') return (c - '0' + 52);
-	if (c == '+')			 return 62;
+	if (c == '+') 			 return 62;
 
 	return 63;
 }
@@ -59,8 +59,8 @@ static int
 is_base64 (char c)
 {
 	if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') ||
-		(c >= '0' && c <= '9') || (c == '+')			 ||
-		(c == '/')			 || (c == '='))
+		 (c >= '0' && c <= '9') || (c == '+') 			 ||
+		 (c == '/') 			 || (c == '='))
 	{
 		return 1;
 	}
@@ -74,8 +74,8 @@ is_base64 (char c)
 Ztring *
 ztring_new (void)
 {
-	Ztring *z = malloc(sizeof(Ztring));
-	z->_text = bb_queue_new();
+	Ztring *z = malloc (sizeof (Ztring));
+	z->_text = bb_queue_new ();
 
 	return z;
 }
@@ -85,11 +85,11 @@ buffer_new (int size)
 {
 	Buffer *b;
 
-	if ((b = malloc(sizeof(Buffer))) == NULL)
+	if ((b = malloc (sizeof (Buffer)) ) == NULL)
 		return NULL;
 
 	b->size = size;
-	b->data = malloc(size);
+	b->data = malloc (size);
 
 	return b;
 }
@@ -97,14 +97,14 @@ buffer_new (int size)
 Buffer *
 buffer_dup (Buffer *buf)
 {
-	return buffer_new_from_ptr(buf->data, buf->size);
+	return buffer_new_from_ptr (buf->data, buf->size);
 }
 
 Buffer *
 buffer_new_from_ptr (unsigned char *ptr, int size)
 {
-	Buffer *b = buffer_new(size);
-	memcpy(b->data, ptr, size);
+	Buffer *b = buffer_new (size);
+	memcpy (b->data, ptr, size);
 
 	return b;
 }
@@ -114,7 +114,7 @@ buffer_new_from_ptr_noalloc (unsigned char *ptr, int size)
 {
 	Buffer *b = NULL;
 
-	if ((b = malloc(sizeof(Buffer))) == NULL)
+	if ((b = malloc (sizeof (Buffer)) ) == NULL)
 		return NULL;
 
 	b->size = size;
@@ -128,8 +128,8 @@ buffer_free (Buffer *b)
 {
 	if (b)
 	{
-		free(b->data);
-		free(b);
+		free (b->data);
+		free (b);
 	}
 }
 
@@ -137,9 +137,9 @@ buffer_free (Buffer *b)
 Ztring *
 ztring_new_with_text (char *text)
 {
-	Ztring *z = ztring_new();
+	Ztring *z = ztring_new ();
 
-	ztring_concat(z, text);
+	ztring_concat (z, text);
 
 	return z;
 }
@@ -147,23 +147,23 @@ ztring_new_with_text (char *text)
 void
 ztring_set_text (Ztring *z, char *text)
 {
-	if (bb_queue_get_length(z->_text)) {
-		ztring_clear(z);
+	if (bb_queue_get_length (z->_text)) {
+		ztring_clear (z);
 	}
 
-	ztring_concat(z, text);
+	ztring_concat (z, text);
 }
 
 int
-ztring_get_len(Ztring *z)
+ztring_get_len (Ztring *z)
 {
-	return bb_queue_get_length(z->_text);
+	return bb_queue_get_length (z->_text);
 }
 
 void
 ztring_print_text (Ztring *z)
 {
-	printf("%s", ztring_get_text(z));
+	printf ("%s", ztring_get_text (z));
 }
 
 void
@@ -175,7 +175,7 @@ ztring_concat_letter (Ztring *z, unsigned char c)
 void
 ztring_concat_letter_nth (Ztring *z, char c, int nth)
 {
-	bb_queue_add_nth(z->_text, (void *) (int) c, nth);
+	bb_queue_add_nth (z->_text, (void *) (int) c, nth);
 }
 
 void
@@ -185,39 +185,39 @@ ztring_concat_ztring_nth (Ztring *ztr1, Ztring *ztr2, int nth)
 }
 
 void
-ztring_concat_ztring(Ztring *ztr1, Ztring *ztr2)
+ztring_concat_ztring (Ztring *ztr1, Ztring *ztr2)
 {
-	bb_queue_concat(ztr1->_text, ztr2->_text);
+	bb_queue_concat (ztr1->_text, ztr2->_text);
 }
 
 void
 ztring_concat_nth (Ztring *z, char *text, int nth)
 {
-	int len = strlen(text);
+	int len = strlen (text);
 	int i;
 
 	for (i = 0; i < len; i++)
 	{
-		ztring_concat_letter_nth(z, (char)(int)text[i], nth);
+		ztring_concat_letter_nth (z, (char) (int) text[i], nth);
 	}
 }
 
 void
 ztring_concat (Ztring *z, char *text)
 {
-	int len = strlen(text);
+	int len = strlen (text);
 	int i;
 
 	for (i = 0; i < len; i++)
 	{
-		ztring_concat_letter(z, (char)(int)text[i]);
+		ztring_concat_letter (z, (char) (int) text[i]);
 	}
 }
 
 char *
-ztring_get_text(Ztring *z)
+ztring_get_text (Ztring *z)
 {
-	char *text = malloc(bb_queue_get_length(z->_text) + 1);
+	char *text = malloc (bb_queue_get_length (z->_text) + 1);
 	int index = 0;
 
 	foreach_bbqueue_item_raw (z->_text, char c)
@@ -233,7 +233,7 @@ ztring_get_text(Ztring *z)
 char *
 ztring_get_text_reversed (Ztring *z)
 {
-	char *text = malloc(bb_queue_get_length(z->_text) + 1);
+	char *text = malloc (bb_queue_get_length (z->_text) + 1);
 	int index = 0;
 
 	foreach_bbqueue_item_reversed_raw (z->_text, char c)
@@ -254,7 +254,7 @@ ztring_get_text_buffer (Ztring *z, char *buffer, int maxsize)
 	foreach_bbqueue_item (z->_text, void *c)
 	{
 		if (index < maxsize)
-			buffer[index++] = (char)(int) c;
+			buffer[index++] = (char) (int) c;
 		else
 			break_foreach;
 	}
@@ -278,7 +278,7 @@ str_dup_printf (const char *format, ...)
 		size = vsnprintf (t, 1, format, pa);
 		size++;
 		str = malloc (size + 1);
-		memset(str, '\0', size + 1);
+		memset (str, '\0', size + 1);
 
 		if (str)
 			vsnprintf (str, size, format, pa);
@@ -288,9 +288,9 @@ str_dup_printf (const char *format, ...)
 }
 
 int
-str_get_word(char *str, char *dest, int maxlen)
+str_get_word (char *str, char *dest, int maxlen)
 {
-	int len = strlen(str);
+	int len = strlen (str);
 	int i;
 	int bufpos = 0;
 
@@ -310,11 +310,16 @@ str_get_word(char *str, char *dest, int maxlen)
 	return i;
 }
 
+char *
+file_get_filename (char *path)
+{
+	return ((strrchr (path, '\\')) != NULL) ? & (strrchr (path, '\\')) [1] : path;
+}
 
 int
 str_getline (char *str, char *dest, int maxlen, int pos)
 {
-	int len = strlen(str);
+	int len = strlen (str);
 	int i;
 	int bufpos = 0;
 	char c;
@@ -344,56 +349,56 @@ file_getline (FILE *file)
 	int bufpos = 0;
 	char c;
 
-	long int cur = ftell(file);
+	long int cur = ftell (file);
 
-	for (c = fgetc(file); c != '\n' && c != EOF; c = fgetc(file))
+	for (c = fgetc (file); c != '\n' && c != EOF; c = fgetc (file))
 		bufpos++;
 
-	char *dest = malloc(bufpos + 1);
+	char *dest = malloc (bufpos + 1);
 	dest[bufpos] = '\0';
 
-	fseek(file, cur, SEEK_SET);
+	fseek (file, cur, SEEK_SET);
 
 	bufpos = 0;
 
-	for (c = fgetc(file); c != '\n' && c != EOF; c = fgetc(file))
+	for (c = fgetc (file); c != '\n' && c != EOF; c = fgetc (file))
 		dest[bufpos++] = c;
 
 	return dest;
 }
 
 int
-str_is_empty(char *msg)
+str_is_empty (char *msg)
 {
 	return (msg[0] == '\0');
 }
 
 void
-str_gets(char *buffer, int len)
+str_gets (char *buffer, int len)
 {
-	fgets(buffer, len, stdin);
-	buffer[strlen(buffer) - 1] = '\0';
+	fgets (buffer, len, stdin);
+	buffer[strlen (buffer) - 1] = '\0';
 }
 
 void
 str_cpy (char **a, const char *b)
 {
-	*a = malloc(strlen(b) + 1);
-	strcpy(*a, b);
+	*a = malloc (strlen (b) + 1);
+	strcpy (*a, b);
 }
 
 void
 strn_cpy_alloc (char **a, const char *b, int len)
 {
-	*a = malloc(len + 1);
-	strncpy(*a, b, len);
-	(*a)[len] = '\0';
+	*a = malloc (len + 1);
+	strncpy (*a, b, len);
+	 (*a) [len] = '\0';
 }
 
 void
 strn_cpy (char *dest, const char *str, int size)
 {
-	strncpy(dest, str, size);
+	strncpy (dest, str, size);
 	dest[size-1] = '\0';
 }
 
@@ -404,14 +409,14 @@ str_substring (const char *str, int start, int end, char *res)
 	{
 		int len = end - start;
 		res[len] = '\0';
-		memcpy(res, str + start, len);
+		memcpy (res, str + start, len);
 
 		return (len);
 	}
 
 	else
 	{
-		printf("Error in substring :\n"
+		printf ("Error in substring :\n"
 			   "start = %d - end = %d\n"
 			   "String = %s\n", start, end, str);
 
@@ -420,7 +425,7 @@ str_substring (const char *str, int start, int end, char *res)
 }
 
 int
-str_is_space(char s)
+str_is_space (char s)
 {
 	return (s == ' ');
 }
@@ -435,24 +440,24 @@ str_trim (char *str)
 		return NULL;
 
 	for
-	(
+	 (
 		 ibuf = str;
-		 *ibuf && str_is_space(*ibuf);
+		 *ibuf && str_is_space (*ibuf);
 		 ++ibuf
 	)
 		;
 
 	if (str != ibuf)
-		memmove(str, ibuf, ibuf - str);
+		memmove (str, ibuf, ibuf - str);
 
 	while (*ibuf)
 	{
-		if (str_is_space(*ibuf) && cnt)
+		if (str_is_space (*ibuf) && cnt)
 			ibuf++;
 
 		else
 		{
-			if (!str_is_space(*ibuf))
+			if (!str_is_space (*ibuf))
 				cnt = 0;
 
 			else
@@ -469,7 +474,7 @@ str_trim (char *str)
 
 	while (--i >= 0)
 	{
-		if (!str_is_space(obuf[i]))
+		if (!str_is_space (obuf[i]))
 			break;
 	}
 
@@ -481,9 +486,9 @@ str_trim (char *str)
 char *
 str_replace (const char *search, const char *replace, char *string)
 {
-	int len_string  = strlen(string);
-	int len_search  = strlen(search);
-	int len_replace = strlen(replace);
+	int len_string  = strlen (string);
+	int len_search  = strlen (search);
+	int len_replace = strlen (replace);
 	int len_offset  = (len_search - len_replace);
 	int size_offset = (len_replace - len_search);
 	int len_dest = -1;
@@ -493,7 +498,7 @@ str_replace (const char *search, const char *replace, char *string)
 
 	char *dest = NULL;
 
-	BbQueue *pos_list = bb_queue_new();
+	BbQueue *pos_list = bb_queue_new ();
 
 	/* Parsing occurences */
 	for (i = 0; i < len_string; i++)
@@ -506,26 +511,26 @@ str_replace (const char *search, const char *replace, char *string)
 
 		if (count == len_search)
 		{
-			bb_queue_add(pos_list, (void*)((int)(i + 1) - len_search));
+			bb_queue_add (pos_list, (void*) ((int) (i + 1) - len_search));
 			count = 0;
 		}
 	}
 
 	/* Compute string destination size */
-	len_dest = len_string + (bb_queue_get_length(pos_list) * size_offset);
-	dest = malloc(len_dest + 1);
+	len_dest = len_string + (bb_queue_get_length (pos_list) * size_offset);
+	dest = malloc (len_dest + 1);
 
-	if (bb_queue_get_length(pos_list) == 0)
+	if (bb_queue_get_length (pos_list) == 0)
 	{
-		strncpy(dest, string, len_dest + 1);
+		strncpy (dest, string, len_dest + 1);
 		return dest;
 	}
 
 	/* Fill the destination string and replace the occurences */
 	count = 0;
-	while (bb_queue_get_length(pos_list) > 0)
+	while (bb_queue_get_length (pos_list) > 0)
 	{
-		r = (int) bb_queue_get_first(pos_list);
+		r = (int) bb_queue_get_first (pos_list);
 		size_offset = len_offset * count;
 
 		for (
@@ -538,7 +543,7 @@ str_replace (const char *search, const char *replace, char *string)
 		}
 		dest[i] = '\0';
 
-		strcat(dest, replace);
+		strcat (dest, replace);
 
 		start = i + len_replace;
 		count++;
@@ -560,16 +565,16 @@ str_replace (const char *search, const char *replace, char *string)
 char *
 str_malloc_clear (int string_len)
 {
-	return calloc(1, string_len);
+	return calloc (1, string_len);
 }
 
 void
 str_cat (char **dest, const char *cat)
 {
-	char *res = malloc(strlen(*dest) + strlen(cat) + 1);
-	strcat(res, cat);
+	char *res = malloc (strlen (*dest) + strlen (cat) + 1);
+	strcat (res, cat);
 
-	free(*dest);
+	free (*dest);
 	*dest = res;
 }
 
@@ -578,24 +583,24 @@ str_explode (char *str, const char *delimiter)
 {
 	BbQueue *q = NULL;
 	int pos = -1;
-	int len_delimiter = strlen(delimiter);
-	int len = strlen(str);
+	int len_delimiter = strlen (delimiter);
+	int len = strlen (str);
 
 	char *tmp = NULL;
 
 	while (
-        ((pos = str_pos(str, delimiter)) != -1)
+        ((pos = str_pos (str, delimiter)) != -1)
     &&  (pos != 0)
     &&  (pos < len)
     )
 	{
         if (q == NULL)
-            q = bb_queue_new();
+            q = bb_queue_new ();
 
-        tmp = malloc(pos);
-        strncpy(tmp, str, pos);
+        tmp = malloc (pos);
+        strncpy (tmp, str, pos);
         tmp[pos] = '\0';
-        bb_queue_add(q, tmp);
+        bb_queue_add (q, tmp);
 
         str = str + pos + len_delimiter;
 
@@ -604,8 +609,8 @@ str_explode (char *str, const char *delimiter)
     if (tmp == NULL)
         return NULL;
 
-	str_cpy(&tmp, str);
-	bb_queue_add(q, tmp);
+	str_cpy (&tmp, str);
+	bb_queue_add (q, tmp);
 
 	return q;
 }
@@ -613,7 +618,7 @@ str_explode (char *str, const char *delimiter)
 char *
 file_get_contents (const char *filename)
 {
-	return file_get_contents_and_size (filename, (int[]){0});
+	return file_get_contents_and_size (filename, (int[]) {0});
 }
 
 char *
@@ -624,30 +629,30 @@ file_get_contents_and_size (const char *filename, int *filesize)
 	int size = 0;
 	*filesize = 0;
 
-	f = fopen(filename, "rb");
+	f = fopen (filename, "rb");
 
 	if (!f)
 	{
-		printf("%s cannot be opened\n", filename);
+		printf ("%s cannot be opened\n", filename);
 		return NULL;
 	}
 
-	fseek(f, 0, SEEK_END);
-	size = ftell(f);
+	fseek (f, 0, SEEK_END);
+	size = ftell (f);
 	*filesize = size;
 
-	rewind(f);
+	rewind (f);
 
-	ret = malloc(size + 1);
+	ret = malloc (size + 1);
 	size = 0;
 
 	for (size = 0; size < *filesize; size++) {
-		ret[size] = fgetc(f);
+		ret[size] = fgetc (f);
 	}
 
 	ret[size] = '\0';
 
-	fclose(f);
+	fclose (f);
 
 	return ret;
 }
@@ -655,7 +660,7 @@ file_get_contents_and_size (const char *filename, int *filesize)
 int
 file_exists (const char *filename)
 {
-	return access(filename, F_OK) != -1;
+	return access (filename, F_OK) != -1;
 }
 
 char *
@@ -667,23 +672,23 @@ file_get_contents_line (const char *filename, int *line)
 	int size = 0;
 	*line = 1;
 
-	f = fopen(filename, "rb");
+	f = fopen (filename, "rb");
 
 	if (!f)
 	{
-		printf("%s cannot be opened\n", filename);
+		printf ("%s cannot be opened\n", filename);
 		return NULL;
 	}
 
-	fseek(f, 0, SEEK_END);
-	size = ftell(f);
+	fseek (f, 0, SEEK_END);
+	size = ftell (f);
 
-	rewind(f);
+	rewind (f);
 
-	ret = malloc(size + 1);
+	ret = malloc (size + 1);
 	size = 0;
 
-	while ((c = fgetc(f)) != EOF)
+	while ((c = fgetc (f)) != EOF)
 	{
 		ret[size++] = c;
 
@@ -693,7 +698,7 @@ file_get_contents_line (const char *filename, int *line)
 
 	ret[size] = '\0';
 
-	fclose(f);
+	fclose (f);
 
 	return ret;
 }
@@ -706,42 +711,42 @@ file_get_contents_handle (FILE *f)
 	int size = 0;
 	fpos_t pos;
 
-	fgetpos(f, &pos);
-	fseek(f, 0, SEEK_END);
-	size = ftell(f);
+	fgetpos (f, &pos);
+	fseek (f, 0, SEEK_END);
+	size = ftell (f);
 
-	fsetpos(f, &pos);
+	fsetpos (f, &pos);
 
-	ret = malloc(size + 1);
+	ret = malloc (size + 1);
 	size = 0;
 
-	while ((c = fgetc(f)) != EOF)
+	while ((c = fgetc (f)) != EOF)
 		ret[size++] = c;
 
 	ret[size] = '\0';
-	fclose(f);
+	fclose (f);
 
 	return ret;
 }
 
 unsigned long long int
-file_get_size(const char *filename)
+file_get_size (const char *filename)
 {
 	FILE *f = NULL;
 	unsigned long long int size = 0;
 
-	f = fopen(filename, "rb");
+	f = fopen (filename, "rb");
 
 	if (!f)
 	{
-		printf("%s cannot be opened\n", filename);
+		printf ("%s cannot be opened\n", filename);
 		return -1;
 	}
 
-	fseek(f, 0, SEEK_END);
-	size = ftell(f);
+	fseek (f, 0, SEEK_END);
+	size = ftell (f);
 
-	fclose(f);
+	fclose (f);
 
 	return size;
 }
@@ -751,9 +756,9 @@ file_get_size_handler (FILE *handler)
 {
 	unsigned int size = 0;
 
-	fseek(handler, 0, SEEK_END);
-	size = ftell(handler);
-	rewind(handler);
+	fseek (handler, 0, SEEK_END);
+	size = ftell (handler);
+	rewind (handler);
 
 	return size;
 }
@@ -761,26 +766,26 @@ file_get_size_handler (FILE *handler)
 int
 file_get_lines_count (char *filename)
 {
-	FILE* f = fopen(filename, "rb");
+	FILE* f = fopen (filename, "rb");
 	int ch, lines = 0;
 
 	if (!f)
 	{
-		printf("%s cannot be opened\n", filename);
+		printf ("%s cannot be opened\n", filename);
 		return -1;
 	}
 
 	do
 	{
-		ch = fgetc(f);
-		if(ch == '\n')
+		ch = fgetc (f);
+		if (ch == '\n')
 			lines++;
 	} while (ch != EOF);
 
 	if (ch != '\n' && lines != 0)
 		lines++;
 
-	fclose(f);
+	fclose (f);
 
 	return lines;
 }
@@ -788,24 +793,24 @@ file_get_lines_count (char *filename)
 char *
 file_get_extension (const char *filename)
 {
-	return strchr(filename, '.');
+	return strchr (filename, '.');
 }
 
 void
-file_clear(const char *filename)
+file_clear (const char *filename)
 {
-	FILE *fp = file_open(filename, "w+");
-	fclose(fp);
+	FILE *fp = file_open (filename, "w+");
+	fclose (fp);
 }
 
 FILE *
 file_open (const char *filename, const char *open_mode)
 {
-	FILE *fp = fopen(filename, open_mode);
+	FILE *fp = fopen (filename, open_mode);
 
 	if (!fp)
 	{
-		printf("%s : cannot be opened\n", filename);
+		printf ("%s : cannot be opened\n", filename);
 		return NULL;
 	}
 
@@ -821,10 +826,10 @@ file_put_data (const char *filename, void *data, int size, void *type)
 	open_type = (type == FILE_APPEND) ?
 		"ab+" : "wb+";
 
-	if ((f = file_open(filename, open_type)))
+	if ((f = file_open (filename, open_type)) )
 	{
-		fwrite(data, size, 1, f);
-		fclose(f);
+		fwrite (data, size, 1, f);
+		fclose (f);
 	}
 }
 
@@ -837,19 +842,19 @@ file_put_contents (const char *filename, const char *text, void *type)
 	open_type = (type == FILE_APPEND) ?
 		"ab+" : "wb+";
 
-	if ((f = file_open(filename, open_type)))
+	if ((f = file_open (filename, open_type)) )
 	{
-		fprintf(f, "%s", text);
-		fflush(f);
+		fprintf (f, "%s", text);
+		fflush (f);
 
-		fclose(f);
+		fclose (f);
 	}
 }
 
 void
-str_to_lower(char *str)
+str_to_lower (char *str)
 {
-	int len = strlen(str);
+	int len = strlen (str);
 	int i;
 
 	for (i = 0; i < len; i++)
@@ -862,11 +867,11 @@ str_to_lower(char *str)
 }
 
 char *
-str_dup_to_lower(char *str)
+str_dup_to_lower (char *str)
 {
-	int len = strlen(str);
+	int len = strlen (str);
 	int i;
-	char *ret = malloc(len + 1);
+	char *ret = malloc (len + 1);
 	ret[len] = '\0';
 
 	for (i = 0; i < len; i++)
@@ -888,25 +893,25 @@ str_hex (char *str)
 	if (str == NULL)
 		return 0;
 
-	return (strtol(str, NULL, 16));
+	return (strtol (str, NULL, 16));
 }
 
 int
 str_sort_by_alpha (char *str1, char *str2)
 {
-	return str_sort_by_alpha_ex(str1, str2, 0);
+	return str_sort_by_alpha_ex (str1, str2, 0);
 }
 
 int
 file_save_binary (const char *filename, const char *data, int size)
 {
-	FILE *fp = fopen(filename, "wb");
+	FILE *fp = fopen (filename, "wb");
 
 	if (fp == NULL)
 		return 0;
 
-	fwrite(data, sizeof(*data), size, fp);
-	fclose(fp);
+	fwrite (data, sizeof (*data) , size, fp);
+	fclose (fp);
 
 	return 1;
 }
@@ -914,7 +919,7 @@ file_save_binary (const char *filename, const char *data, int size)
 char *
 str_pos_ptr (char *str, const char *search)
 {
-    int pos = str_pos(str, search);
+    int pos = str_pos (str, search);
 
     if (pos >= 0)
         return &str[pos];
@@ -925,7 +930,7 @@ str_pos_ptr (char *str, const char *search)
 char *
 str_pos_after_ptr (char *str, const char *search)
 {
-    int pos = str_pos_after(str, search);
+    int pos = str_pos_after (str, search);
 
     if (pos >= 0)
         return &str[pos];
@@ -937,7 +942,7 @@ int
 str_n_pos (const char *str, const char *search, int len_str)
 {
 	int i,  len_string = len_str,
-            len_search = strlen(search);
+            len_search = strlen (search);
 	int count = 0;
 
 	for (i = 0; i < len_string; i++)
@@ -957,18 +962,29 @@ str_n_pos (const char *str, const char *search, int len_str)
 }
 
 int
+char_pos (const char *str, const char character)
+{
+	char * pos = strchr (str, (int) character);
+	if (pos == NULL) {
+		return -1;
+	}
+
+	return pos - str;
+}
+
+int
 str_pos (const char *str, const char *search)
 {
-	return str_n_pos(str, search, strlen(str));
+	return str_n_pos (str, search, strlen (str));
 }
 
 int
 str_pos_after (const char *str, const char *search)
 {
-    int res = str_pos(str, search);
+    int res = str_pos (str, search);
     if (res != -1)
     {
-        res += strlen(search);
+        res += strlen (search);
     }
 
     return res;
@@ -977,7 +993,7 @@ str_pos_after (const char *str, const char *search)
 int
 str_pos_reverse (const char *str, const char *search)
 {
-	int i, len_string = strlen(str), len_search = strlen(search);
+	int i, len_string = strlen (str) , len_search = strlen (search);
 	int count = len_search - 1;
 
 	for (i = len_string - 1; i >= 0; i--)
@@ -1007,8 +1023,8 @@ str_bet (const char *str, const char *start, const char *end)
 
 	if (start != NULL)
 	{
-		start_len = strlen(start);
-		pos_start = str_pos(str, start);
+		start_len = strlen (start);
+		pos_start = str_pos (str, start);
 	}
 	else
 	{
@@ -1019,25 +1035,25 @@ str_bet (const char *str, const char *start, const char *end)
 	if (pos_start == -1)
 		return NULL;
 
-	if (end != (void*)-1)
-		pos_end = str_pos(&str[pos_start + start_len], end) + pos_start + start_len;
+	if (end != (void*) -1)
+		pos_end = str_pos (&str[pos_start + start_len], end) + pos_start + start_len;
 	else
-		pos_end = strlen(str);
+		pos_end = strlen (str);
 
 	if (pos_end == -1)
 		return NULL;
 
 	len = (pos_end) - (pos_start + start_len);
-	ret = malloc(len + 1);
+	ret = malloc (len + 1);
 
 	if (-1 == str_substring
-	(
+	 (
 		str,
 		pos_start + start_len,
 		pos_end,
 		ret
 	)) {
-		free(ret);
+		free (ret);
 		return NULL;
 	}
 
@@ -1047,22 +1063,22 @@ str_bet (const char *str, const char *start, const char *end)
 void
 str_bet_buffer (const char *str, const char *start, const char *end, char *buffer)
 {
-	int start_len = strlen(start);
+	int start_len = strlen (start);
 
 	int pos_end;
-	int pos_start = str_pos(str, start);
+	int pos_start = str_pos (str, start);
 
 
 	if (pos_start == -1)
 		return;
 
-	pos_end = str_pos(&str[pos_start + start_len], end) + pos_start + start_len;
+	pos_end = str_pos (&str[pos_start + start_len], end) + pos_start + start_len;
 
 	if (pos_end == -1)
 		return;
 
 	str_substring
-	(
+	 (
 		str,
 		pos_start + start_len,
 		pos_end,
@@ -1081,9 +1097,9 @@ str_b64_encode (int size, unsigned char *src)
 		return NULL;
 
 	if (!size)
-		size = strlen ((char *)src);
+		size = strlen ((char *) src);
 
-	out = malloc(size * 4/3 + 4);
+	out = malloc (size * 4/3 + 4);
 
 	p = out;
 
@@ -1103,16 +1119,16 @@ str_b64_encode (int size, unsigned char *src)
 		b6 = ((b2 & 0xf) << 2) | (b3 >> 6);
 		b7 = b3 & 0x3f;
 
-		*p++ = b64_encode(b4);
-		*p++ = b64_encode(b5);
+		*p++ = b64_encode (b4);
+		*p++ = b64_encode (b5);
 
 		if (i + 1 < size)
-			*p++ = b64_encode(b6);
+			*p++ = b64_encode (b6);
 		else
 			*p++ = '=';
 
 		if (i + 2 < size)
-			*p++ = b64_encode(b7);
+			*p++ = b64_encode (b7);
 		else
 			*p++ = '=';
 	}
@@ -1122,7 +1138,7 @@ str_b64_encode (int size, unsigned char *src)
 }
 
 int
-str_b64_decode(unsigned char *dest, const char *src)
+str_b64_decode (unsigned char *dest, const char *src)
 {
 	char c1, c2, c3, c4;
 	unsigned char *p = dest;
@@ -1132,16 +1148,16 @@ str_b64_decode(unsigned char *dest, const char *src)
 
 	if (src && *src)
 	{
-		l = strlen(src) + 1;
-		buf = malloc(l);
+		l = strlen (src) + 1;
+		buf = malloc (l);
 
 		for (k = 0, l = 0; src[k]; k++)
 		{
-			if(is_base64(src[k]))
+			if (is_base64 (src[k]))
 				buf[l++]= src[k];
 		}
 
-		for(k=0; k<l; k+=4)
+		for (k=0; k<l; k+=4)
 		{
 
 			c1 = 'A';
@@ -1165,22 +1181,22 @@ str_b64_decode(unsigned char *dest, const char *src)
 			if (k + 3 < l)
 				c4 = buf[k+3];
 
-			b1 = b64_decode(c1);
-			b2 = b64_decode(c2);
-			b3 = b64_decode(c3);
-			b4 = b64_decode(c4);
+			b1 = b64_decode (c1);
+			b2 = b64_decode (c2);
+			b3 = b64_decode (c3);
+			b4 = b64_decode (c4);
 
 			*p++ = (b1 << 2) | (b2 >> 4);
 
-			if(c3 != '=')
+			if (c3 != '=')
 				*p++ = ((b2 & 0xf) << 4) | (b3 >> 2);
 
-			if(c4 != '=') {
+			if (c4 != '=') {
 				*p++ = ((b3 & 0x3) << 6) | b4;
 			}
 		}
 
-		free(buf);
+		free (buf);
 
 		return (p - dest);
 	}
@@ -1192,23 +1208,23 @@ str_b64_decode(unsigned char *dest, const char *src)
 void
 str_debug (const char *str)
 {
-	int i, len = strlen(str);
+	int i, len = strlen (str);
 	for (i = 0; i < len; i++)
 	{
-		printf("(%d)[%x] = [%c]\n", i, str[i], str[i]);
+		printf (" (%d) [%x] = [%c]\n", i, str[i], str[i]);
 	}
 }
 
 char *
 str_repeat (char *repeat_pattern, int n)
 {
-	int pattern_len = strlen(repeat_pattern);
+	int pattern_len = strlen (repeat_pattern);
 
-	char *res = malloc(pattern_len * n + 1);
+	char *res = malloc (pattern_len * n + 1);
 
 	for (int i = 0; i < n; i++)
 	{
-		strcpy(&res[i*pattern_len], repeat_pattern);
+		strcpy (&res[i*pattern_len], repeat_pattern);
 	}
 
 	return res;
@@ -1217,42 +1233,42 @@ str_repeat (char *repeat_pattern, int n)
 void
 str_debug_len (const unsigned char *str, int len)
 {
-	printf("String debug Data :\n");
+	printf ("String debug Data :\n");
 
 	for (int i = 0; i < len; i++)
 	{
-		printf("%c", str[i]);
+		printf ("%c", str[i]);
 	}
 
-	printf("\n");
+	printf ("\n");
 
 	for (int i = 0; i < len; i++)
 	{
-		printf("%3c ", str[i]);
+		printf ("%3c ", str[i]);
 	}
 
-	printf("\n");
+	printf ("\n");
 
 	for (int i = 0; i < len; i++)
 	{
-		printf("  %.2x", str[i]);
+		printf ("  %.2x", str[i]);
 	}
 
-	printf("\n");
+	printf ("\n");
 
 	for (int i = 0; i < len; i++)
 	{
-		printf("%3d ", i);
+		printf ("%3d ", i);
 	}
 
-	printf("\n");
+	printf ("\n");
 }
 
 int
 is_letter (char c)
 {
 	return (
-		(c >= 'A' && c <= 'Z')
+		 (c >= 'A' && c <= 'Z')
 	||  (c >= 'a' && c <= 'z')
 	);
 }
@@ -1266,25 +1282,25 @@ is_printable (char c)
 void
 ztring_debug (Ztring *z)
 {
-	char *buffer = ztring_get_text(z);
-	str_debug_len(buffer, ztring_get_len(z));
-	free(buffer);
+	char *buffer = ztring_get_text (z);
+	str_debug_len (buffer, ztring_get_len (z));
+	free (buffer);
 }
 
 void
-ztring_clear(Ztring *z)
+ztring_clear (Ztring *z)
 {
 	if (z != NULL)
 	{
-		bb_queue_clear(z->_text);
+		bb_queue_clear (z->_text);
 	}
 }
 
 char *
 ztring_release (Ztring *z)
 {
-	char *str = ztring_get_text(z);
-	ztring_free(z);
+	char *str = ztring_get_text (z);
+	ztring_free (z);
 	return str;
 }
 
@@ -1294,7 +1310,7 @@ ztring_free (Ztring *z)
 {
 	if (z != NULL)
 	{
-		bb_queue_clear(z->_text);
-		free(z);
+		bb_queue_clear (z->_text);
+		free (z);
 	}
 }

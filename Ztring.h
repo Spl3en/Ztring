@@ -34,7 +34,7 @@
  *		  [ADD]	   str_explode
  *		  [ADD]	   file_get_size
  *
- *	  [+] 1.6			(10 / 01 / 2012)
+ *	  [+] 1.6			 (10 / 01 / 2012)
  *		  [ADD]	   ztr_concat_nth / ztr_concat_ztring_nth
 */
 
@@ -46,15 +46,15 @@
 #include <string.h>
 #include <ctype.h>
 #include <unistd.h>
-#include "../BbQueue/BbQueue.h"
-#include "../Utils/Utils.h"
+#include "BbQueue/BbQueue.h"
+#include "Utils/Utils.h"
 
 /* Macros */
 #define str_make_macro(s) (# s)
-#define str_equals(str1, str2) (strcmp((str1), (str2)) == 0)
+#define str_equals(str1, str2) (strcmp ((str1) , (str2)) == 0)
 
 /* Defines */
-#define FILE_APPEND ((void*)1)
+#define FILE_APPEND ((void*) 1)
 #define EOS		 (-1)
 
 
@@ -87,10 +87,10 @@ struct _File
 	* * * * * * * * * */
 
 Ztring *
-ztring_new			  	(void);
+ztring_new			  	 (void);
 
 Ztring *
-ztring_new_with_text	(char *text);
+ztring_new_with_text	 (char *text);
 
 Buffer *
 buffer_new (int size);
@@ -113,43 +113,43 @@ buffer_new_from_ptr_noalloc (unsigned char *ptr, int size);
 
 /* * Ztring * */
 void
-ztring_concat_letter	(Ztring *z, unsigned char c);
+ztring_concat_letter	 (Ztring *z, unsigned char c);
 
 char *
-ztring_get_text		 	(Ztring *z);
+ztring_get_text		 	 (Ztring *z);
 
 void
-ztring_set_text 		(Ztring *z, char *text);
+ztring_set_text 		 (Ztring *z, char *text);
 
 char *
 ztring_get_text_reversed (Ztring *z);
 
 void
-ztring_get_text_buffer 	(Ztring *z, char *buffer, int maxsize);
+ztring_get_text_buffer 	 (Ztring *z, char *buffer, int maxsize);
 
 void
-ztring_concat		   	(Ztring *z, char *text);
+ztring_concat		   	 (Ztring *z, char *text);
 
 void
 ztring_concat_letter_nth (Ztring *z, char c, int nth);
 
 void
-ztring_concat_nth	   	(Ztring *z, char *text, int nth);
+ztring_concat_nth	   	 (Ztring *z, char *text, int nth);
 
 void
-ztring_concat_ztring	(Ztring *ztr1, Ztring *ztr2);
+ztring_concat_ztring	 (Ztring *ztr1, Ztring *ztr2);
 
 void
 ztring_concat_ztring_nth (Ztring *ztr1, Ztring *ztr2, int nth);
 
 void
-ztring_print_text	   	(Ztring *z);
+ztring_print_text	   	 (Ztring *z);
 
 int
-ztring_get_len		  	(Ztring *z);
+ztring_get_len		  	 (Ztring *z);
 
 void
-ztring_debug			(Ztring *z);
+ztring_debug			 (Ztring *z);
 /* * String * */
 char *
 str_repeat (char *repeat_pattern, int n);
@@ -158,10 +158,10 @@ int
 str_hex (char *str);
 
 char *
-str_trim				(char *str);
+str_trim				 (char *str);
 
 char *
-str_malloc_clear		(int size);
+str_malloc_clear		 (int size);
 
 char *
 str_replace			 (const char *search, const char *replace, char *string);
@@ -179,19 +179,22 @@ void
 str_cpy				    (char **dest, const char *str);
 
 void
-strn_cpy_alloc 			(char **dest, const char *str, int size);
+strn_cpy_alloc 			 (char **dest, const char *str, int size);
 
 void
-strn_cpy				(char *dest, const char *str, int size);
+strn_cpy				 (char *dest, const char *str, int size);
 
 void
-str_gets				(char *buffer, int len);
+str_gets				 (char *buffer, int len);
+
+int
+char_pos 				 (const char *str, const char character);
 
 int
 str_pos				    (const char *str, const char *search);
 
 int
-str_n_pos 				(const char *str, const char *search, int len_str);
+str_n_pos 				 (const char *str, const char *search, int len_str);
 
 char *
 str_pos_ptr             (char *str, const char *search);
@@ -203,7 +206,7 @@ char *
 str_pos_after_ptr       (char *str, const char *search);
 
 int
-str_pos_reverse 		(const char *str, const char *search);
+str_pos_reverse 		 (const char *str, const char *search);
 
 void
 str_debug			   (const char *str);
@@ -215,28 +218,28 @@ char *
 str_bet				 (const char *str, const char *start, const char *end);
 
 void
-str_bet_buffer 			(const char *str, const char *start, const char *end, char *buffer);
+str_bet_buffer 			 (const char *str, const char *start, const char *end, char *buffer);
 
 int
 str_sort_by_alpha	   (char *str1, char *str2);
 
 char *
-str_dup_to_lower		(char *str);
+str_dup_to_lower		 (char *str);
 
 void
-str_to_lower			(char *str);
+str_to_lower			 (char *str);
 
 int
-str_get_word			(char *str, char *dest, int maxlen);
+str_get_word			 (char *str, char *dest, int maxlen);
 
 int
-str_is_empty			(char *str);
+str_is_empty			 (char *str);
 
 BbQueue *
 str_explode			 (char *str, const char *delimiter);
 
 int
-str_b64_decode(unsigned char *dest, const char *src);
+str_b64_decode (unsigned char *dest, const char *src);
 
 inline int
 is_letter (char c);
@@ -255,7 +258,7 @@ void
 file_clear			  (const char *filename);
 
 int
-file_save_binary		(const char *filename, const char *data, int size);
+file_save_binary		 (const char *filename, const char *data, int size);
 
 void
 file_put_contents	   (const char *filename, const char *text, void *type);
@@ -270,19 +273,22 @@ unsigned long long int
 file_get_size		   (const char *filename);
 
 unsigned int
-file_get_size_handler 	(FILE *handler);
+file_get_size_handler 	 (FILE *handler);
 
 char *
-file_getline 			(FILE *file);
+file_getline 			 (FILE *file);
+
+char *
+file_get_filename 		 (char *path);
 
 int
-file_get_lines_count 	(char *filename);
+file_get_lines_count 	 (char *filename);
 
 char *
 file_get_contents_line  (const char *filename, int *line);
 
 int
-file_exists 			(const char *filename);
+file_exists 			 (const char *filename);
 
 	/** * * * * * * * *
 	*   @Destructors  *
@@ -292,7 +298,7 @@ void
 ztring_free	 (Ztring *z);
 
 void
-ztring_clear	(Ztring *z);
+ztring_clear	 (Ztring *z);
 
 char *
 ztring_release (Ztring *z);
